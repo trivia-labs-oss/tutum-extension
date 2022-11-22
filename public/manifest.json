@@ -1,0 +1,25 @@
+{
+  "name": "__MSG_appName__",
+  "description": "__MSG_appDesc__",
+  "default_locale": "en",
+  "manifest_version": 3,
+  "version": "1.2.0",
+  "icons": {
+    "32": "icons/icon.png",
+    "64": "icons/icon.png",
+    "128": "icons/icon.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": ["*://*/*"],
+  "permissions": ["storage", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "run_at": "document_idle",
+      "js": ["contentScript.js"],
+      "css": []
+    }
+  ]
+}
