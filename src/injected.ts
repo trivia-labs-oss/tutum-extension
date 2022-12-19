@@ -62,12 +62,17 @@ const proxyHandler = {
       const requestArg = args[0]
       logger.debug('handle ethereum call', prop, requestArg)
 
+      const chainId = parseInt(await target.request({ method: 'eth_chainId' }))
+      if (chainId !== 1) {
+        return originalCall(...args)
+      }
+
       if (requestArg.method === 'eth_sendTransaction') {
         // { method: string; params: [Transaction] }
         const transaction = requestArg.params[0] as Transaction
         const response = await requestManager.request({
           refUrl: window.location.href,
-          chainId: await target.request({ method: 'eth_chainId' }),
+          chainId: chainId.toString(),
           transaction,
         })
         logger.debug('User action', response)
@@ -77,7 +82,7 @@ const proxyHandler = {
       } else if (requestArg.method === 'eth_sign') {
         const response = await requestManager.request({
           refUrl: window.location.href,
-          chainId: await target.request({ method: 'eth_chainId' }),
+          chainId: chainId.toString(),
           method: requestArg.method,
           params: requestArg.params,
         })
